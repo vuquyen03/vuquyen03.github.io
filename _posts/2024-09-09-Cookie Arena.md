@@ -1,22 +1,22 @@
 ---
-title: Creating static site with Jekyll
+title: Write up for challenges in Cookie Arena
 date: 2024-09-09
 category: [ctf]
 tag: [web, crypto, forensic]
 ---
 
-# Web 
+## Web 
 
-## Empty Execution
+### Empty Execution
 
-### Tổng quan 
+#### Tổng quan 
 
 Khi mở bài tập ta thấy website cho ta phần src code. Từ đây ta phân tích có đường dẫn `/run_command` nhận request `POST` để nhận một data dưới dạng `json`. Ngoài ra web cũng sẽ check xem đầu vào có chứa `..` hay `/` không.
 
 ![](../assets/Cookie%20Arena/img/Overview_Empty_Execution.png)
 
 
-### Ý tưởng
+#### Ý tưởng
 
 Ta nghĩ ngay đến `OS command injection`. Tuy nhiên câu lệnh không được ngắn hơn 5 và cần phải qua `os.access(executable_to_run, os.X_OK)`.  Chúng ta dùng 1 trick như sau:
 
@@ -28,25 +28,25 @@ Ta nghĩ ngay đến `OS command injection`. Tuy nhiên câu lệnh không đư�
 
         Đối với thư mục, quyền thực thi không giống như quyền thực thi trên file thực thi. Quyền thực thi trên thư mục cho phép người dùng liệt kê các file và truy cập vào chúng
 
-### Get Flag
+#### Get Flag
 
 Bởi vì `/` ở trong blacklist nên ta không thể nào đọc trực tiếp file `/flag.txt` bằng lệnh `cat`. Ta nghĩ đến 1 cách đó là encode thành `base64` rồi dùng lệnh echo để decode.
 
 Payload: {"command":". ;cat `echo 'L2ZsYWcudHh0'|base64 -d`; "}
 
-### Knowledge
+#### Knowledge
 
 - OS command injection
 
 - Python
 
-## Nslookup
+### Nslookup
 
-### Tổng quan 
+#### Tổng quan 
 
 Bài này hiển thị ra một trang web yêu cầu nhập domain. Khi nhập ta thấy nó sẽ thực hiện một lệnh `nslookup` tới một trang web. Cụ thể câu lệnh sẽ là `$ nslookup '{input}'`.
 
-### Ý tưởng
+#### Ý tưởng
 
 Ta nghĩ ngay đến `OS command injection`. Ta chèn `google.com'; echo 'a` để test xem nó có thể thực hiện được nhiều lệch cùng một lúc không. Câu trả lời là có.
 
@@ -66,12 +66,12 @@ Ta đọc file index.php bằng input `google.com'; gr''ep '' index.php; echo 'a
 
 ![index.php](../assets/Cookie%20Arena/img/index.png)
 
-### Get Flag
+#### Get Flag
 
 Dùng lệnh `dir /` để tìm file flag -> Payload để đọc file flag: `google.com'; gr''ep '' /flagXXXX.txt ; echo 'a`
 
-### Knowledge
+#### Knowledge
 
 - OS command injection
 
-# Crypto
+## Crypto
