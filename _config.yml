@@ -19,7 +19,7 @@ title: Dora's Blog # the main title
 tagline: CyberSec | CTF Player && Notes # it will display as the subtitle
 
 description: >- # used by seo meta and the atom feed
-  A minimal, responsive and feature-rich Jekyll theme for technical writing.
+  A personal blog sharing CTF challenges and insights into cybersecurity adventures.
 
 # Fill in the protocol & hostname for your site.
 # E.g. 'https://username.github.io', note that it does not end with a '/'.
@@ -98,7 +98,7 @@ theme_mode: # [light | dark]
 cdn:
 
 # the avatar on sidebar, support local or CORS resources
-avatar: https://2.gravatar.com/avatar/e7668ef9a816f18b826eba3f31187906b4b2c8f7dea81caebb8c6efe32b4d0d4?size=256
+avatar: /assets/img/cat.jpg
 
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.
